@@ -1,0 +1,78 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--c-line);
+  transition: opacity var(--dur-hover);
+}
+
+.dimmed {
+  opacity: 0.5;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1.6fr) 56px 96px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-bottom: 1px solid var(--c-line);
+  min-height: 56px;
+}
+
+.row:hover {
+  background: var(--c-surface-2);
+}
+
+.head {
+  min-height: 36px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+}
+
+.head:hover {
+  background: none;
+}
+
+.n {
+  color: var(--c-text-2);
+  text-align: right;
+  font-size: var(--t-small);
+}
+
+.t {
+  min-width: 0;
+}
+
+.t b {
+  display: block;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.a {
+  color: var(--c-text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.d {
+  color: var(--c-text-2);
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.act {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.just {
+  background: color-mix(in srgb, var(--c-ok) 12%, transparent);
+}

@@ -1,0 +1,33 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-height: 34px;
+}
+
+.header h2 {
+  font-size: var(--t-h2);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.count {
+  font-size: var(--t-small);
+  color: var(--c-text-2);
+}
+
+.count b {
+  color: var(--c-text);
+}
+
+.spacer {
+  flex: 1;
+}

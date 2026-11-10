@@ -1,0 +1,27 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 28px;
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-panel);
+  color: var(--c-text-2);
+}
+
+.empty b {
+  color: var(--c-text);
+  font-size: 1.05rem;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border-radius: var(--r-input);
+  background: color-mix(in srgb, var(--c-danger) 8%, var(--c-surface));
+  border: 1px solid color-mix(in srgb, var(--c-danger) 35%, transparent);
+  font-size: 0.9rem;
+}

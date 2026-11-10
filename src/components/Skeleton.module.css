@@ -1,0 +1,23 @@
+.skeleton {
+  display: block;
+  background: var(--c-surface-2);
+  border-radius: 6px;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 28px 32px;
+}
+
+/* Keyframes live in the module that uses them: CSS Modules scopes animation names. */
+@keyframes shimmer {
+  50% {
+    opacity: 0.55;
+  }
+}

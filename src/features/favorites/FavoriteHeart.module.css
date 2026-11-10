@@ -1,0 +1,39 @@
+.heart {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--c-text);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+  transition: transform var(--dur-hover);
+}
+
+.heart:hover,
+.heart[aria-pressed='true'] {
+  color: var(--c-fav);
+}
+
+.heart:active {
+  transform: scale(0.9);
+}
+
+.heart[data-pending],
+.on[data-pending] svg {
+  animation: pulse 0.6s ease-in-out infinite;
+}
+
+.on {
+  color: var(--c-fav);
+  border-color: var(--c-fav);
+}
+
+/* Keyframes live in the module that uses them: CSS Modules scopes animation names. */
+@keyframes pulse {
+  50% {
+    transform: scale(1.15);
+  }
+}

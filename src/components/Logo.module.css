@@ -1,0 +1,14 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-display);
+  font-weight: var(--d-weight);
+  font-stretch: var(--d-stretch);
+  letter-spacing: var(--d-track);
+  font-size: 1.2rem;
+}
+
+.large {
+  font-size: 1.5rem;
+}

@@ -1,0 +1,88 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px 16px;
+}
+
+.five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.cell {
+  min-width: 0;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  border-radius: var(--r-cover);
+  text-decoration: none;
+}
+
+.link:hover > :first-child {
+  transform: translateY(-2px);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 700;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--c-text-2);
+}
+
+.heart {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.slot {
+  aspect-ratio: 1;
+  width: 100%;
+  border: 2px dashed var(--c-line);
+  border-radius: var(--r-cover);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  color: var(--c-text-2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  padding: 8px;
+}
+
+.slot:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.coverSkeleton {
+  aspect-ratio: 1;
+  width: 100%;
+}

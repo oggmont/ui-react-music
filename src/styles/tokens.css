@@ -1,0 +1,67 @@
+/*
+ * Design tokens: Proposal A, "Sleeve" (design-music-system/ui/Design-System.md, decision D-02).
+ * Components use these semantic names, never raw values.
+ */
+:root {
+  /* Color */
+  --c-bg: #f4f6fa;
+  --c-surface: #ffffff;
+  --c-surface-2: #e9edf4;
+  --c-line: #d5dbe6;
+  --c-text: #151a2d;
+  --c-text-2: #5a6278;
+  --c-accent: #2445e0;
+  --c-on-accent: #ffffff;
+  --c-fav: #c8284b;
+  --c-ok: #167349;
+  --c-danger: #c42b2b;
+
+  /* Type */
+  --f-display: 'Archivo', 'Arial Black', system-ui, sans-serif;
+  --f-text: 'Figtree', system-ui, sans-serif;
+  --d-weight: 800;
+  --d-stretch: 125%;
+  --d-track: -0.02em;
+  --d-lh: 0.98;
+
+  --t-hero: clamp(2.5rem, 6vw, 4.5rem);
+  --t-h1: 2rem;
+  --t-h2: 1.25rem;
+  --t-body: 1rem;
+  --t-small: 0.875rem;
+  --t-label: 0.75rem;
+
+  /* Spacing scale: 4, 8, 12, 16, 24, 32, 48, 64 */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+
+  /* Radius, shadow, size */
+  --r-cover: 6px;
+  --r-control: 999px;
+  --r-panel: 14px;
+  --r-input: 10px;
+  --shadow-pop: 0 12px 32px rgb(21 26 45 / 0.16);
+  --shadow-cover: 0 1px 0 rgb(21 26 45 / 0.06), 0 6px 14px rgb(21 26 45 / 0.1);
+  --hit: 44px;
+  --content-max: 1200px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-hover: 150ms;
+  --dur-menu: 200ms;
+  --dur-dialog: 250ms;
+
+  /* Toast (dark chip on the light theme) */
+  --toast-bg: #151a2d;
+  --toast-fg: #f4f6fa;
+  --toast-action: #9db0ff;
+  --toast-icon: #7ee2b0;
+
+  color-scheme: light;
+}

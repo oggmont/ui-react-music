@@ -1,0 +1,52 @@
+# Rendered by the nginx image's entrypoint (envsubst): ${API_UPSTREAM} and ${NGINX_LOCAL_RESOLVERS}.
+server {
+    listen 8080;
+    server_name _;
+    root /usr/share/nginx/html;
+
+    # Resolve the API's container name per request, so nginx starts even when the API is down.
+    resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
+    set $api_upstream ${API_UPSTREAM};
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+
+    # Security headers. A location with its own add_header drops these, so those repeat them.
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header X-Frame-Options "DENY" always;
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    # Same-origin API: the browser calls /api/v1/..., nginx forwards it unchanged.
+    location /api/ {
+        proxy_pass $api_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Same-origin for the browser, so no CORS: don't let the API's CORS filter judge our origin.
+        proxy_set_header Origin "";
+    }
+
+    # Hashed build assets never change: cache them for a year.
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        try_files $uri =404;
+    }
+
+    # Client-side routes (/songs, /playlists/20, /u/ana.garcia) all load index.html.
+    location / {
+        add_header Cache-Control "no-cache" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header X-Frame-Options "DENY" always;
+        try_files $uri $uri/ /index.html;
+    }
+}

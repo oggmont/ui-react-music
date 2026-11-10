@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+dist-ssr/
+coverage/
+.vitest/
+*.tsbuildinfo
+
+# Environment (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Claude Code (local only)
+CLAUDE.md
+CLAUDE.local.md
+Prompts.md
+.claude/
+
+# Logs
+npm-debug.log*
+*.log
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.swp

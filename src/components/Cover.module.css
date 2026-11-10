@@ -1,0 +1,24 @@
+.cover {
+  display: block;
+  aspect-ratio: 1;
+  width: 100%;
+  border-radius: var(--r-cover);
+  overflow: hidden;
+  background: var(--c-surface-2);
+  box-shadow: var(--shadow-cover);
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+.cover svg,
+.cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.letter {
+  font-family: var(--f-display);
+  font-weight: var(--d-weight);
+  font-stretch: var(--d-stretch);
+}

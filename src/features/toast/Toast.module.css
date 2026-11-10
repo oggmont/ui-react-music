@@ -1,0 +1,76 @@
+.viewport {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  outline: none;
+  max-width: calc(100vw - 32px);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 16px;
+  border-radius: var(--r-panel);
+  background: var(--toast-bg);
+  color: var(--toast-fg);
+  box-shadow: var(--shadow-pop);
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-height: 48px;
+}
+
+.toast[data-state='open'] {
+  animation: toast-in var(--dur-menu) var(--ease);
+}
+
+.toast[data-state='closed'] {
+  animation: fade var(--dur-menu) var(--ease) reverse;
+}
+
+.icon {
+  flex: none;
+  color: var(--toast-icon);
+}
+
+.toast[data-variant='error'] .icon {
+  color: #ff9a9a;
+}
+
+.message {
+  min-width: 0;
+  padding-right: 6px;
+}
+
+.action {
+  flex: none;
+  border: 0;
+  background: none;
+  color: var(--toast-action);
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.action:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Keyframes live in the module that uses them: CSS Modules scopes animation names. */
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
