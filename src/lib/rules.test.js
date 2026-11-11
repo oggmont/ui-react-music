@@ -83,7 +83,7 @@ describe('favorites and visibility', () => {
 
 describe('buildAddMenu (S4)', () => {
   const playlists = [
-    { playlist_id: 1, name: 'Workout', track_count: 100, last_added_at: null },
+    { playlist_id: 1, name: 'Workout', track_count: 20, last_added_at: null },
     {
       playlist_id: 2,
       name: 'boleros',
@@ -92,13 +92,13 @@ describe('buildAddMenu (S4)', () => {
       last_added_at: '2026-11-01T00:00:00Z',
     },
     { playlist_id: 3, name: 'Road Trip', track_count: 7, last_added_at: '2026-11-09T00:00:00Z' },
-    { playlist_id: 4, name: 'Night Drive', track_count: 42 },
+    { playlist_id: 4, name: 'Night Drive', track_count: 12 },
   ];
 
   it('lists every playlist A–Z with its count or status', () => {
     const { items } = buildAddMenu(playlists);
     expect(items.map((i) => i.playlist.name)).toEqual(['boleros', 'Night Drive', 'Road Trip', 'Workout']);
-    expect(items.map((i) => i.status)).toEqual(['✓ Added', '42/100', '7/100', 'Full']);
+    expect(items.map((i) => i.status)).toEqual(['✓ Added', '12/20', '7/20', 'Full']);
     expect(items.filter((i) => i.disabled).map((i) => i.playlist.playlist_id)).toEqual([2, 1]);
   });
 

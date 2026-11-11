@@ -153,7 +153,7 @@ Browser ──► http://localhost:5173  (Vite dev server, container "music-ui")
 | `/u/:username`                 | S8 Profile                                                                     | no                                                     |
 | `/me`                          | Redirects to `/u/{your username}`                                              | yes                                                    |
 
-S5 _Create playlist_, _Edit details_, _Replace a favorite_ and _Last favorite_ are dialogs, not routes. Every product rule is shown before the API enforces it: 5 favorites, 100 songs per playlist, 20 playlists, new playlists private, visibility follows favorites.
+S5 _Create playlist_, _Edit details_, _Replace a favorite_ and _Last favorite_ are dialogs, not routes. Every product rule is shown before the API enforces it: 5 favorites, 20 songs per playlist, 20 playlists, new playlists private, visibility follows favorites.
 
 ## Project layout
 

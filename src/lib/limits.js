@@ -1,7 +1,7 @@
 /** Product limits from UI-Design.md (BR-02, BR-03, BR-04). The API enforces them too. */
 export const MAX_FAVORITES = 5;
 export const MAX_PLAYLISTS = 20;
-export const MAX_TRACKS = 100;
+export const MAX_TRACKS = 20;
 
 /** Field limits shared with the API (S2, S5, BR-15). */
 export const PLAYLIST_NAME_MAX = 120;
