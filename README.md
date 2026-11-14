@@ -11,7 +11,7 @@
 | [ui/mockups/index.html](https://github.com/oggmont/design-music-system/blob/main/ui/mockups/index.html) | Clickable high-fidelity mockups of every screen                           |
 | [API-Design.md](https://github.com/oggmont/design-music-system/blob/main/API-Design.md)                 | The API contract: endpoints, errors, JWT tokens, `ETag` / `If-Match`      |
 
-> **Scope:** desktop first (1024 px and wider). The phone layout in the design (bottom tabs, bottom sheets, full-screen dialogs) is not built yet.
+> **Scope:** every screen works on a desktop, a tablet and a phone, as [UI-Design.md § Responsive behavior](https://github.com/oggmont/design-music-system/blob/main/UI-Design.md#responsive-behavior) describes. See [Phone and tablet](#phone-and-tablet).
 
 ## Contents
 
@@ -23,6 +23,7 @@
 - [Configuration](#configuration)
 - [How it connects to the API](#how-it-connects-to-the-api)
 - [Screens and routes](#screens-and-routes)
+- [Phone and tablet](#phone-and-tablet)
 - [Project layout](#project-layout)
 - [Conventions](#conventions)
 - [Tests](#tests)
@@ -156,6 +157,25 @@ Browser ──► http://localhost:5173  (Vite dev server, container "music-ui")
 
 S5 _Create playlist_, _Edit details_, _Replace a favorite_ and _Last favorite_ are dialogs, not routes. Every product rule is shown before the API enforces it: 5 favorites, 20 songs per playlist, 20 playlists, new playlists private, visibility follows favorites.
 
+## Phone and tablet
+
+The layout follows [UI-Design.md § Responsive behavior](https://github.com/oggmont/design-music-system/blob/main/UI-Design.md#responsive-behavior) and the phone frames of the [mockups](https://github.com/oggmont/design-music-system/blob/main/ui/mockups/index.html). It's done in CSS: plain media queries, with the breakpoints written out because CSS variables can't be used in a media query. The one exception is the tab bar, a separate component.
+
+| Width                    | What changes                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| under 640 px (phone)     | Bottom tab bar **Home · Songs · Discover · Me** ([TabBar.jsx](src/app/layout/TabBar.jsx)). The top bar keeps the logo and a **+** for New playlist. 16 px gutters. The five favorites and Home's "Playlists to discover" scroll sideways; other grids have 2 columns. Song rows have two lines (title, then artist · album). Menus open as bottom sheets, dialogs take the full screen, and toasts sit above the tab bar. |
+| 640–1023 px (tablet)     | Top bar. Grids have 3 columns. Below 800 px the nav links lose their icons and New playlist is a **+**, so the bar fits.                                                                                                                                                                                                                                                                                                  |
+| 1024 px and up (desktop) | Top bar, content at most 1200 px wide (unchanged).                                                                                                                                                                                                                                                                                                                                                                        |
+
+How some of it works:
+
+- **Bottom sheets.** Every Radix `DropdownMenu.Content` carries the global class `sheet-on-phone`. Under 640 px, [global.css](src/styles/global.css) overrides the inline styles Radix puts on its popper wrapper, so the menu sits at the bottom with a grab handle and a scrim. A tap on the scrim is a tap outside the menu, so it closes. Keyboard handling, roles and focus stay the menu's own. A new menu needs that class too.
+- **Log out on a phone.** The account menu (avatar) is hidden on a phone, as in the mockups, so your own profile, the **Me** tab, has a **Log out** button. It's shown only under 640 px. The mockups have no log out on a phone, so this is a proposed design addition.
+- **iPhone details.** `viewport-fit=cover`, with `env(safe-area-inset-*)` keeping the header, tab bar, sheets and dialogs clear of the notch and home indicator. Fields use 16 px text, because Safari zooms into smaller ones. Hover effects on song rows, cards, hearts and the Add button only apply on devices that can hover, so a tap doesn't leave them highlighted. Touch targets are 44 px.
+- **Add to Home Screen.** [public/manifest.webmanifest](public/manifest.webmanifest) and `apple-touch-icon.png` make Runlist open full screen with its own icon. The session lasts as long as the tab (D-11), so fully closing the app can sign you out.
+
+To try it, open the dev server in your browser's device mode at 390 px wide. To use a real phone on the same network, run `npm run dev -- --host` and open `http://<your computer's IP>:5173`. Host names other than `localhost` need `ALLOWED_HOSTS`. The deployed version is at the URL in [Deployment (Google Cloud)](#deployment-google-cloud).
+
 ## Project layout
 
 ```
@@ -165,7 +185,7 @@ src/
 │   ├── App.jsx              providers: QueryClient → Toast → Auth → Router
 │   ├── routes.jsx           route table (lazy, code-split pages)
 │   ├── queryClient.js       TanStack Query defaults
-│   └── layout/              header, layouts, route guards, error boundary
+│   └── layout/              header, tab bar (phone), layouts, route guards, error boundary
 ├── api/
 │   ├── client.js            fetch wrapper: tokens, refresh, If-Match, ApiError
 │   ├── session.js           where tokens live (memory / sessionStorage)
@@ -185,6 +205,7 @@ src/
 
 ## Conventions
 
+- **Responsive in CSS.** Each module adds its own `@media (max-width: 639.98px)` (phone) and `(max-width: 1023.98px)` (tablet) rules next to the desktop ones, and hover styles go inside `@media (hover: hover)`. Menus need `sheet-on-phone` (see [Phone and tablet](#phone-and-tablet)).
 - **Design tokens only.** Components use the semantic CSS variables in [src/styles/tokens.css](src/styles/tokens.css) (`--c-accent`, `--r-panel`, …), never raw colors.
 - **CSS Modules scope `@keyframes`.** Define the keyframes inside the module that uses them, because a global name won't resolve. Radix waits for `animationend` on close, so a missing animation leaves menus and dialogs open.
 - **Server state lives in TanStack Query**, keyed by [src/api/queryKeys.js](src/api/queryKeys.js). After a write, invalidate the keys it affects.
@@ -205,7 +226,8 @@ npm run test:coverage  # coverage report in coverage/
 
 - **Pure logic**: formatting, covers, product rules, add-menu ordering, sign-up validation.
 - **API client**: bearer token, `If-Match`, error envelope, network errors, a single-flight refresh for parallel requests, retry after `401`, and the session ending when the refresh fails.
-- **Components and pages**: rendered through the real providers and routes, with the network mocked by [MSW](https://mswjs.io): login (validation, wrong password, redirect back), sign-up (username suggestion, blur checks, `username_taken`), the create/edit dialog (disabled states, discard confirmation, `412` reload), and favoriting (toast copy, the Replace dialog at 5 of 5).
+- **Components and pages**: rendered through the real providers and routes, with the network mocked by [MSW](https://mswjs.io): login (validation, wrong password, redirect back), sign-up (username suggestion, blur checks, `username_taken`), the create/edit dialog (disabled states, discard confirmation, `412` reload), favoriting (toast copy, the Replace dialog at 5 of 5), and the phone layout (tab bar and the current tab, log out from Me, two-line song rows, menus marked as bottom sheets).
+- **Layout itself** isn't something jsdom can check (it applies no CSS). Check it in a browser at 390 px (phone), 700 px (tablet) and 1280 px (desktop).
 
 Every request in a test must be mocked; an unmocked request fails the test.
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Pencil } from 'lucide-react';
-import { Navigate, useParams } from 'react-router';
+import { LogOut, Pencil } from 'lucide-react';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { isApiError } from '@/api/client';
 import { getCountries, getUser, getUserFavorites } from '@/api/endpoints';
 import { queryKeys } from '@/api/queryKeys';
@@ -23,9 +23,15 @@ const notFoundRetry = (count, error) => !isApiError(error, 404) && count < 2;
 /** S8 Profile: who someone is, through their five favorite playlists (always public, A–Z). */
 export default function ProfilePage() {
   const { username } = useParams();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const mine = useFavorites();
+  const navigate = useNavigate();
   const isMe = user?.username === username;
+
+  async function handleLogout() {
+    await logout();
+    navigate('/login', { replace: true });
+  }
 
   const profile = useQuery({
     queryKey: queryKeys.user(username),
@@ -69,7 +75,11 @@ export default function ProfilePage() {
   return (
     <Screen>
       <div className={styles.head}>
-        {person ? <Avatar user={person} size={128} /> : <Skeleton width={128} height={128} radius="50%" />}
+        {person ? (
+          <Avatar user={person} size={128} className={styles.avatar} />
+        ) : (
+          <Skeleton width={128} height={128} radius="50%" className={styles.avatar} />
+        )}
         <div className={styles.text}>
           {person ? (
             <>
@@ -85,6 +95,16 @@ export default function ProfilePage() {
                     Edit profile
                   </Button>
                   <span className={styles.hint}>Coming after v1</span>
+                  {/* Phones have no account menu: log out from your own profile (the Me tab). */}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    icon={LogOut}
+                    className={styles.logout}
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </Button>
                 </div>
               )}
             </>

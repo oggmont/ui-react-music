@@ -99,3 +99,72 @@
     transform: translateY(4px) scale(0.98);
   }
 }
+
+.newLabel {
+  display: contents;
+}
+
+/* Tablet: the same bar, tighter, so the three links, the button and the avatar fit. */
+@media (max-width: 1023.98px) {
+  .bar {
+    gap: 12px;
+    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+  }
+
+  .navLink {
+    padding-inline: 10px;
+  }
+}
+
+/* Narrow tablet: text-only links and a + button keep the bar on one line. */
+@media (min-width: 640px) and (max-width: 799.98px) {
+  .navLink svg {
+    display: none;
+  }
+
+  .newButton {
+    width: var(--hit);
+    padding: 0;
+  }
+
+  .newLabel {
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* Phone: logo and + only; the links live in the tab bar, the account in the Me tab. */
+@media (max-width: 639.98px) {
+  .bar {
+    gap: 8px;
+    padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px
+      max(16px, env(safe-area-inset-left));
+  }
+
+  .nav,
+  .me {
+    display: none;
+  }
+
+  .newButton {
+    width: var(--hit);
+    min-height: var(--hit);
+    padding: 0;
+  }
+
+  /* Visually hidden, still the button's name. */
+  .newLabel {
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}

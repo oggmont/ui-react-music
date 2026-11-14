@@ -12,9 +12,22 @@
   transition: transform var(--dur-hover);
 }
 
-.heart:hover,
 .heart[aria-pressed='true'] {
   color: var(--c-fav);
+}
+
+@media (hover: hover) {
+  .heart:hover {
+    color: var(--c-fav);
+  }
+}
+
+/* Phone: a 44 px touch target. */
+@media (max-width: 639.98px) {
+  .heart {
+    width: var(--hit);
+    height: var(--hit);
+  }
 }
 
 .heart:active {

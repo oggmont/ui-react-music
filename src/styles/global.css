@@ -102,6 +102,80 @@ svg {
   border: 0;
 }
 
+/*
+ * Phone (under 640 px, UI-Design.md § Responsive behavior).
+ * - Fields use 16 px text: iOS Safari zooms the page into smaller ones on focus.
+ * - Menus open as bottom sheets. Every Radix DropdownMenu.Content carries `sheet-on-phone`; Radix
+ *   positions it with inline styles on its popper wrapper, which these rules override, so keyboard
+ *   handling, roles and focus stay exactly the menu's. The scrim is drawn on <body>; a tap on it
+ *   is a tap outside the menu, which closes it.
+ */
+@media (max-width: 639.98px) {
+  :root {
+    --gutter: 16px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  [data-radix-popper-content-wrapper]:has(> .sheet-on-phone) {
+    position: fixed !important;
+    inset: auto 0 0 !important;
+    transform: none !important;
+    min-width: 0 !important;
+  }
+
+  .sheet-on-phone.sheet-on-phone {
+    width: 100%;
+    min-width: 0;
+    max-height: 80dvh;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 0;
+    border-radius: 18px 18px 0 0;
+    padding: 8px max(8px, env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
+    box-shadow: 0 -8px 32px rgb(21 26 45 / 0.18);
+    animation: sheet-up var(--dur-dialog) var(--ease);
+  }
+
+  /* The grab handle. */
+  .sheet-on-phone.sheet-on-phone::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin: 4px auto 6px;
+    border-radius: 2px;
+    background: var(--c-line);
+  }
+
+  body:has(.sheet-on-phone[data-state='open'])::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 39;
+    background: rgb(8 10 16 / 0.45);
+    animation: sheet-fade var(--dur-menu) var(--ease);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0.4;
+  }
+}
+
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

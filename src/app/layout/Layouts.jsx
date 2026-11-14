@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/context';
 import { FavoritesProvider } from '@/features/favorites/FavoritesProvider';
 import { CreatePlaylistProvider } from '@/features/playlists/CreatePlaylistProvider';
 import { GuestHeader, Header } from './Header';
+import { TabBar } from './TabBar';
 import styles from './Layouts.module.css';
 
 /** Providers that need the router (they navigate), around every route. */
@@ -32,20 +33,25 @@ function SessionError() {
   );
 }
 
-/** Header + content area (max 1200 px). Public routes render here signed in or out. */
+/**
+ * Header + content area (max 1200 px), plus the tab bar on a phone when signed in. Public routes
+ * render here signed in or out.
+ */
 export function AppLayout() {
   const { status } = useAuth();
   if (status === 'loading') return <PageLoader />;
   if (status === 'error') return <SessionError />;
+  const signedIn = status === 'signedIn';
   return (
     <>
       <a href="#main" className={styles.skip}>
         Skip to content
       </a>
-      {status === 'signedIn' ? <Header /> : <GuestHeader />}
-      <main id="main" className={styles.main} tabIndex={-1}>
+      {signedIn ? <Header /> : <GuestHeader />}
+      <main id="main" className={`${styles.main} ${signedIn ? styles.withTabs : ''}`} tabIndex={-1}>
         <Outlet />
       </main>
+      {signedIn && <TabBar />}
     </>
   );
 }

@@ -3,7 +3,8 @@ import styles from './SongList.module.css';
 
 /**
  * Song rows: number, title, artist, album, time and one action (Add, or ⋯ for the owner on S7).
- * `rows` is `[{ key, number, track }]`; `renderAction(row)` draws the last cell.
+ * `rows` is `[{ key, number, track }]`; `renderAction(row)` draws the last cell. On a phone a row
+ * is two lines: the title, then "artist · album" (the header and those two columns are hidden).
  */
 export function SongList({ label, rows, renderAction, dimmed = false, footer, showHeader = true }) {
   return (
@@ -47,6 +48,8 @@ function SongRow({ row, action }) {
       </span>
       <span className={styles.t} role="cell">
         <b>{track.name}</b>
+        {/* Phone: the artist and album columns (hidden there) fold into this second line. */}
+        <span className={styles.sub}>{[artists, track.album?.title].filter(Boolean).join(' · ')}</span>
       </span>
       <span className={styles.a} role="cell" title={artists}>
         {artists}
@@ -71,8 +74,12 @@ export function SongListSkeleton({ count = 6 }) {
         <div className={styles.row} key={i}>
           <Skeleton width={16} height={12} />
           <Skeleton width="70%" />
-          <Skeleton width="60%" height={12} />
-          <Skeleton width="60%" height={12} />
+          <span className={styles.a}>
+            <Skeleton width="60%" height={12} />
+          </span>
+          <span className={styles.a}>
+            <Skeleton width="60%" height={12} />
+          </span>
           <Skeleton width={32} height={12} />
           <Skeleton width={64} height={30} radius={999} />
         </div>

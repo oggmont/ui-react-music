@@ -50,6 +50,12 @@
   --shadow-cover: 0 1px 0 rgb(21 26 45 / 0.06), 0 6px 14px rgb(21 26 45 / 0.1);
   --hit: 44px;
   --content-max: 1200px;
+  /*
+   * Breakpoints (UI-Design.md § Responsive behavior), used as literal media queries because CSS
+   * variables can't be: phone `(max-width: 639.98px)`, tablet `(max-width: 1023.98px)`.
+   */
+  --tabbar-h: 60px;
+  --gutter: 32px;
 
   /* Motion */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);

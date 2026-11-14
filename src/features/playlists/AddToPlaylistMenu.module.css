@@ -12,7 +12,12 @@
   white-space: nowrap;
 }
 
-.trigger:hover,
+@media (hover: hover) {
+  .trigger:hover {
+    background: var(--c-surface-2);
+  }
+}
+
 .trigger[data-state='open'] {
   background: var(--c-surface-2);
 }
@@ -142,6 +147,28 @@
   flex-direction: column;
   gap: 8px;
   padding: 8px 10px;
+}
+
+/* Phone: a 44 px "+" button; the menu itself becomes a bottom sheet (global.css). */
+@media (max-width: 639.98px) {
+  .trigger {
+    width: var(--hit);
+    min-height: var(--hit);
+    padding: 0;
+    justify-content: center;
+  }
+
+  .triggerLabel {
+    display: none;
+  }
+
+  .item {
+    min-height: 52px;
+  }
+
+  .filterInput {
+    min-height: var(--hit);
+  }
 }
 
 /* Keyframes live in the module that uses them: CSS Modules scopes animation names. */

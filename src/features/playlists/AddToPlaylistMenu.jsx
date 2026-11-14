@@ -127,6 +127,7 @@ function MenuBody({ track, onPick, onNew }) {
 /**
  * "+ Add" on a song row (UI-Design.md § Add to playlist): a menu button, not a <select>. Last used
  * first, then every playlist A–Z, then "+ New playlist". Enter/Space opens, arrows move, Esc closes.
+ * On a phone the button is just "+" and the menu opens as a bottom sheet (`sheet-on-phone`).
  */
 export function AddToPlaylistMenu({ track, onAdded }) {
   const [open, setOpen] = useState(false);
@@ -138,11 +139,17 @@ export function AddToPlaylistMenu({ track, onAdded }) {
       <DropdownMenu.Trigger asChild>
         <button type="button" className={styles.trigger} aria-label={`Add ${track.name} to a playlist`}>
           <Plus size={18} aria-hidden="true" />
-          <span>Add</span>
+          <span className={styles.triggerLabel}>Add</span>
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className={styles.menu} align="end" sideOffset={6} collisionPadding={12} loop>
+        <DropdownMenu.Content
+          className={`${styles.menu} sheet-on-phone`}
+          align="end"
+          sideOffset={6}
+          collisionPadding={12}
+          loop
+        >
           <DropdownMenu.Label className={styles.title}>Add “{track.name}” to</DropdownMenu.Label>
           {open && (
             <MenuBody

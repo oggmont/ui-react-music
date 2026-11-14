@@ -95,3 +95,19 @@
 .link:hover {
   text-decoration: underline;
 }
+
+/* Phone: touch targets of at least 44 × 44 px (UI-Design.md § Accessibility). */
+@media (max-width: 639.98px) {
+  .btn {
+    min-height: var(--hit);
+  }
+
+  .sm {
+    min-height: 40px;
+  }
+
+  .icon {
+    width: var(--hit);
+    height: var(--hit);
+  }
+}

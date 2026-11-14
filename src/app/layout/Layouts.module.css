@@ -7,7 +7,8 @@
 .screen {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 28px 32px 56px;
+  padding: 28px max(var(--gutter), env(safe-area-inset-right)) 56px
+    max(var(--gutter), env(safe-area-inset-left));
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -79,4 +80,33 @@
   padding: 40px clamp(24px, 5vw, 64px);
   gap: 18px;
   min-width: 0;
+}
+
+/* Phone: 16 px gutter, room under the content for the fixed tab bar. */
+@media (max-width: 639.98px) {
+  .screen {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    gap: 32px;
+  }
+
+  .withTabs {
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+  }
+}
+
+/* Under 760 px the art panel goes and the form takes the width (as in the mockups). */
+@media (max-width: 759.98px) {
+  .auth {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .art {
+    display: none;
+  }
+
+  .form {
+    padding: max(32px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 32px
+      max(20px, env(safe-area-inset-left));
+  }
 }

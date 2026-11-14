@@ -19,8 +19,10 @@
   min-height: 56px;
 }
 
-.row:hover {
-  background: var(--c-surface-2);
+@media (hover: hover) {
+  .row:hover {
+    background: var(--c-surface-2);
+  }
 }
 
 .head {
@@ -54,6 +56,15 @@
   white-space: nowrap;
 }
 
+.sub {
+  display: none;
+  font-size: 0.85rem;
+  color: var(--c-text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .a {
   color: var(--c-text-2);
   overflow: hidden;
@@ -75,4 +86,23 @@
 
 .just {
   background: color-mix(in srgb, var(--c-ok) 12%, transparent);
+}
+
+/* Phone: #, two-line title (title, then artist · album), time, action. */
+@media (max-width: 639.98px) {
+  .row {
+    grid-template-columns: 24px minmax(0, 1fr) auto auto;
+    gap: 8px;
+    padding: 8px 4px;
+    min-height: 60px;
+  }
+
+  .head,
+  .a {
+    display: none;
+  }
+
+  .sub {
+    display: block;
+  }
 }

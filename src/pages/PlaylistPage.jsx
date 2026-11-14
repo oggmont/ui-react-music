@@ -59,7 +59,7 @@ function PlaylistSkeleton() {
   return (
     <Screen>
       <div className={styles.head} aria-hidden="true">
-        <Skeleton height={220} width={220} radius="var(--r-cover)" />
+        <Skeleton height={220} width={220} radius="var(--r-cover)" className={styles.coverSkeleton} />
         <div className={styles.headText}>
           <Skeleton width={180} height={12} />
           <Skeleton width="60%" height={56} />
@@ -78,7 +78,7 @@ function RowMenu({ entry, onRemove }) {
         <IconButton icon={Ellipsis} label={`More for ${entry.track.name}`} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className={styles.menu} align="end" sideOffset={4}>
+        <DropdownMenu.Content className={`${styles.menu} sheet-on-phone`} align="end" sideOffset={4}>
           <DropdownMenu.Item
             className={`${styles.menuItem} ${styles.danger}`}
             onSelect={() => onRemove(entry)}
@@ -277,7 +277,11 @@ export default function PlaylistPage() {
                     <IconButton icon={Ellipsis} label={`More for ${playlist.name}`} />
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
-                    <DropdownMenu.Content className={styles.menu} align="end" sideOffset={4}>
+                    <DropdownMenu.Content
+                      className={`${styles.menu} sheet-on-phone`}
+                      align="end"
+                      sideOffset={4}
+                    >
                       <DropdownMenu.Item className={styles.menuItem} onSelect={() => setEditing(true)}>
                         <Pencil size={20} aria-hidden="true" />
                         Edit details

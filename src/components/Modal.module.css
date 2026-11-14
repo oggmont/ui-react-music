@@ -66,6 +66,36 @@
   }
 }
 
+/*
+ * Phone: dialogs take the full screen (UI-Design.md § Responsive behavior), with the safe areas
+ * (notch, home indicator) kept clear.
+ */
+@media (max-width: 639.98px) {
+  .dialog {
+    inset: 0;
+    transform: none;
+    width: 100%;
+    max-height: none;
+    height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+      max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    animation: dialog-up var(--dur-dialog) var(--ease);
+  }
+
+  .close {
+    margin: -10px -10px 0 0;
+  }
+}
+
+@keyframes dialog-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
 /* Keyframes live in the module that uses them: CSS Modules scopes animation names. */
 @keyframes fade {
   from {

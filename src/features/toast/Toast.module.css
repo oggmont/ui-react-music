@@ -61,6 +61,32 @@
   background: rgb(255 255 255 / 0.08);
 }
 
+.toast[data-swipe='move'] {
+  transform: translateY(var(--radix-toast-swipe-move-y));
+}
+
+.toast[data-swipe='cancel'] {
+  transform: translateY(0);
+  transition: transform var(--dur-menu) var(--ease);
+}
+
+.toast[data-swipe='end'] {
+  animation: fade var(--dur-menu) var(--ease) reverse;
+}
+
+/* Phone: full width, above the tab bar and the home indicator; swipe down to dismiss. */
+@media (max-width: 639.98px) {
+  .viewport {
+    bottom: calc(var(--tabbar-h) + 24px + env(safe-area-inset-bottom));
+    width: calc(100vw - 24px);
+    max-width: none;
+  }
+
+  .toast {
+    justify-content: space-between;
+  }
+}
+
 @keyframes toast-in {
   from {
     opacity: 0;

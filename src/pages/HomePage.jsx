@@ -115,13 +115,15 @@ function DiscoverSection() {
       actions={<TextLink to="/discover">See all →</TextLink>}
     >
       {query.isPending ? (
-        <CardGrid label="Playlists to discover">{skeletonCards(4)}</CardGrid>
+        <CardGrid columns="shelf" label="Playlists to discover">
+          {skeletonCards(4)}
+        </CardGrid>
       ) : query.isError ? (
         <ErrorState onRetry={query.refetch} />
       ) : query.data.items.length === 0 ? (
         <EmptyState title="You've favorited everything we found">Check back later.</EmptyState>
       ) : (
-        <CardGrid label="Playlists to discover">
+        <CardGrid columns="shelf" label="Playlists to discover">
           {query.data.items.map((p) => (
             <PlaylistCard
               key={p.playlist_id}

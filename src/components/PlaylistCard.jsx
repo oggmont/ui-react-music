@@ -44,10 +44,19 @@ export function PlaylistCardSkeleton() {
   );
 }
 
-/** Card grid. `columns="five"` for the five favorites. */
+const VARIANTS = { five: styles.five, shelf: styles.shelf };
+
+/**
+ * Card grid. `columns="five"` for the five favorites; `columns="shelf"` for a short row (Home's
+ * "Playlists to discover"). On a phone both scroll sideways, and plain grids have two columns.
+ */
 export function CardGrid({ columns, children, label }) {
   return (
-    <div className={`${styles.grid} ${columns === 'five' ? styles.five : ''}`} role="list" aria-label={label}>
+    <div
+      className={[styles.grid, VARIANTS[columns]].filter(Boolean).join(' ')}
+      role="list"
+      aria-label={label}
+    >
       {Children.toArray(children).map((child) => (
         <div role="listitem" key={child.key} className={styles.cell}>
           {child}

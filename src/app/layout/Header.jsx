@@ -14,7 +14,10 @@ const LINKS = [
   { to: '/discover', label: 'Discover', icon: Compass },
 ];
 
-/** One header on every signed-in screen, with New playlist so you can create from anywhere. */
+/**
+ * One header on every signed-in screen, with New playlist so you can create from anywhere. On a
+ * phone (under 640 px) the links move to the bottom <TabBar> and the bar keeps the logo and +.
+ */
 export function Header() {
   const { user, logout } = useAuth();
   const { open: openCreate, atLimit } = useCreatePlaylist();
@@ -39,16 +42,19 @@ export function Header() {
         ))}
       </nav>
       <span className={styles.spacer} />
+      {/* On a phone only the + shows; the label stays for screen readers. */}
       <Button
         variant="primary"
         icon={Plus}
+        className={styles.newButton}
         onClick={() => openCreate()}
         disabledReason={
           atLimit ? 'You have 20 playlists, the most allowed. Delete one to make a new one.' : undefined
         }
       >
-        New playlist
+        <span className={styles.newLabel}>New playlist</span>
       </Button>
+      {/* On a phone the account menu gives way to the Me tab (log out is on your profile). */}
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button type="button" className={styles.me} aria-label="Account menu">

@@ -137,6 +137,33 @@
   color: var(--c-danger);
 }
 
+/* Phone: one column, a 160 px cover on top (the menus are bottom sheets, see global.css). */
+@media (max-width: 639.98px) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    justify-items: start;
+  }
+
+  .cover {
+    width: 160px;
+  }
+
+  .coverSkeleton {
+    width: 160px !important;
+    height: 160px !important;
+  }
+
+  .hero {
+    margin: 4px 0 8px;
+    font-size: clamp(2.2rem, 11vw, 3rem);
+  }
+
+  .menuItem {
+    min-height: 52px;
+  }
+}
+
 /* Keyframes live in the module that uses them: CSS Modules scopes animation names. */
 @keyframes pop {
   from {

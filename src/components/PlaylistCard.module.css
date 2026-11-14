@@ -29,8 +29,10 @@
   text-decoration: none;
 }
 
-.link:hover > :first-child {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .link:hover > :first-child {
+    transform: translateY(-2px);
+  }
 }
 
 .text {
@@ -85,4 +87,51 @@
 .coverSkeleton {
   aspect-ratio: 1;
   width: 100%;
+}
+
+/* Tablet: three columns (UI-Design.md § Responsive behavior). */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .grid:not(.five) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/*
+ * Phone: plain grids get two columns; the five favorites and shelves scroll sideways, about two
+ * and a half cards wide, snapping to each card. The row runs to the screen edges.
+ */
+@media (max-width: 639.98px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+
+  .five,
+  .shelf {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 42%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 2px var(--gutter) 8px;
+    scrollbar-width: none;
+  }
+
+  .five::-webkit-scrollbar,
+  .shelf::-webkit-scrollbar {
+    display: none;
+  }
+
+  .five > .cell,
+  .shelf > .cell {
+    scroll-snap-align: start;
+  }
+
+  .heart {
+    top: 4px;
+    right: 4px;
+  }
 }
