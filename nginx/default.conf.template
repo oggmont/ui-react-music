@@ -71,6 +71,12 @@ server {
         proxy_set_header Origin "";
     }
 
+    # Web app manifest (Add to Home Screen): nginx's mime.types has no entry for .webmanifest.
+    location = /manifest.webmanifest {
+        types { }
+        default_type application/manifest+json;
+    }
+
     # Hashed build assets never change: cache them for a year.
     location /assets/ {
         expires 1y;
