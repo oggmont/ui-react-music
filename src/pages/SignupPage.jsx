@@ -118,6 +118,9 @@ export default function SignupPage() {
           <Field
             label="Username"
             autoComplete="username"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             maxLength={30}
             autoCapitalize="none"
             spellCheck={false}
@@ -134,6 +137,9 @@ export default function SignupPage() {
             label="Email"
             type="email"
             autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             value={values.email}
             onChange={(e) => set('email', e.target.value)}
             onBlur={() => checkOnBlur('email')}

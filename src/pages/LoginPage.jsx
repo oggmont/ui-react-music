@@ -63,6 +63,9 @@ export default function LoginPage() {
           <Field
             label="Username or email"
             autoComplete="username"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             error={fieldErrors.username}
