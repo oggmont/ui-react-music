@@ -27,6 +27,7 @@
 - [Conventions](#conventions)
 - [Tests](#tests)
 - [Docker image](#docker-image)
+- [Deployment (Google Cloud)](#deployment-google-cloud)
 - [Troubleshooting](#troubleshooting)
 
 ## Stack
@@ -224,6 +225,23 @@ Every request in a test must be mocked; an unmocked request fails the test.
 docker build --target prod -t ui-react-music .
 docker run --rm -p 8082:8080 --network music-db_default ui-react-music
 ```
+
+nginx sends the upstream's host name as `Host` and SNI, so `API_UPSTREAM` can also be an HTTPS URL such as the API's Cloud Run address.
+
+## Deployment (Google Cloud)
+
+The UI runs on Cloud Run at **https://runlist-ui-894040023319.us-central1.run.app**, inside the GCP free tier. It's the `prod` image, with `API_UPSTREAM` set to the API's Cloud Run URL.
+
+[.github/workflows/deploy.yml](.github/workflows/deploy.yml) does the following:
+
+- **On every push and pull request:** runs `npm run check`.
+- **On pushes to `main`, or when you run it by hand:** builds the `prod` image, pushes it to Artifact Registry (`us-central1-docker.pkg.dev/runlist-514701/runlist/ui`) and deploys the Cloud Run service `runlist-ui`.
+
+The service has 1 vCPU and 256 MiB, scales from 0 to 2 instances and is billed per request. The workflow authenticates without keys, through Workload Identity Federation.
+
+The project's infrastructure (API, database VM, registry, service accounts, budget alert), its costs, and what to avoid so it stays free are in db-postgresql-runlist's [deploy/gcp/README.md](https://github.com/oggmont/db-postgresql-runlist/blob/main/deploy/gcp/README.md).
+
+The first page after a quiet period can take a few seconds, while Cloud Run starts the UI and the API.
 
 ## Troubleshooting
 
