@@ -1,9 +1,13 @@
 import { PageLoader } from '@/components/Skeleton';
 import { AppLayout, AuthLayout, RequireAuth, RootLayout } from './layout/Layouts';
 import { NotFoundPage, RouteError } from './layout/RouteError';
+import { importFresh } from './staleBuild';
 
-/** Code-split each screen: its module loads the first time its route matches. */
-const page = (load) => async () => ({ Component: (await load()).default });
+/**
+ * Code-split each screen: its module loads the first time its route matches. If the chunk is gone
+ * because a new build was deployed, the page reloads once (see staleBuild.js).
+ */
+const page = (load) => async () => ({ Component: (await importFresh(load)).default });
 
 /** Routes from UI-Design.md § Information architecture. */
 export const routes = [
@@ -30,7 +34,9 @@ export const routes = [
               { path: 'discover', lazy: page(() => import('@/pages/DiscoverPage')) },
               {
                 path: 'me',
-                lazy: async () => ({ Component: (await import('@/pages/ProfilePage')).MeRedirect }),
+                lazy: async () => ({
+                  Component: (await importFresh(() => import('@/pages/ProfilePage'))).MeRedirect,
+                }),
               },
             ],
           },
