@@ -29,8 +29,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -48,26 +48,29 @@ jobs:
       group: deploy-ui
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - id: auth
-        uses: google-github-actions/auth@v3
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         with:
           workload_identity_provider: ${{ env.WIF_PROVIDER }}
           service_account: ${{ env.DEPLOYER }}
           token_format: access_token
 
-      - uses: google-github-actions/setup-gcloud@v3
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
 
-      - uses: docker/login-action@v4
+      - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ${{ env.REGION }}-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 
-      - uses: docker/setup-buildx-action@v4
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
-      - uses: docker/build-push-action@v7
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        env:
+          # No build-record artifact: on a public repo anyone could download the build logs.
+          DOCKER_BUILD_RECORD_UPLOAD: false
         with:
           context: .
           target: prod
@@ -79,8 +82,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Scales to zero and bills per request, so it stays in Cloud Run's free tier. The
-      # service's public access (allUsers invoker) was granted once by setup.sh; deploys keep it.
+      # Scales to zero and bills per request, so it stays in Cloud Run's free tier. Its public
+      # access (allUsers invoker) was granted once by setup.sh; deploys keep it. All its outbound
+      # traffic goes through the VPC (Direct VPC egress, no cost), which is the only way to reach
+      # the API: the API only accepts internal traffic.
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy "$SERVICE" \
@@ -90,6 +95,7 @@ jobs:
             --port 8080 --cpu 1 --memory 256Mi \
             --min-instances 0 --max-instances 2 --concurrency 80 --cpu-throttling \
             --timeout 60 \
+            --network default --subnet default --vpc-egress all-traffic \
             --set-env-vars "API_UPSTREAM=$API_URL" \
             --labels app=runlist,component=ui \
             --quiet

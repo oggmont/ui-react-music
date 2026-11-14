@@ -6,12 +6,29 @@ map $http_x_forwarded_proto $forwarded_proto {
     ''      $scheme;
 }
 
+# The caller's IP. Cloud Run's front end appends the real client address as the LAST entry of
+# X-Forwarded-For, so earlier entries (which a client can send itself) are ignored.
+map $http_x_forwarded_for $client_ip {
+    default                  $remote_addr;
+    "~(?<last>[^,\s]+)\s*$"  $last;
+}
+
+# Brute-force protection: log in, refresh and sign up are limited per client IP (other requests
+# get an empty key, which nginx doesn't limit). Per instance; Cloud Run runs at most two.
+map "$request_method:$uri" $auth_limit_key {
+    default                              "";
+    "~^POST:/api/v1/auth/"               $client_ip;
+    "~^POST:/api/v1/users/?$"            $client_ip;
+}
+limit_req_zone $auth_limit_key zone=auth:1m rate=10r/m;
+
 server {
     listen 8080;
     server_name _;
     root /usr/share/nginx/html;
+    server_tokens off;
 
-    # Resolve the API's container name per request, so nginx starts even when the API is down.
+    # Resolve the API's host name per request, so nginx starts even when the API is down.
     resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
     set $api_upstream ${API_UPSTREAM};
 
@@ -19,6 +36,8 @@ server {
     gzip_types text/css application/javascript application/json image/svg+xml;
 
     # Security headers. A location with its own add_header drops these, so those repeat them.
+    # Browsers ignore HSTS over plain HTTP, so it's harmless in local Docker.
+    add_header Strict-Transport-Security "max-age=31536000" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header X-Frame-Options "DENY" always;
@@ -34,6 +53,10 @@ server {
     # Cloud Run URL (https://runlist-api-....run.app) on GCP. Cloud Run routes by Host and
     # SNI, so both carry the upstream's host name, not the UI's.
     location /api/ {
+        limit_req zone=auth burst=10 nodelay;
+        limit_req_status 429;
+        client_max_body_size 1m;
+
         proxy_pass $api_upstream;
         proxy_http_version 1.1;
         proxy_ssl_server_name on;
@@ -52,13 +75,17 @@ server {
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable" always;
+        add_header Strict-Transport-Security "max-age=31536000" always;
         add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header X-Frame-Options "DENY" always;
         try_files $uri =404;
     }
 
     # Client-side routes (/songs, /playlists/20, /u/ana.garcia) all load index.html.
     location / {
         add_header Cache-Control "no-cache" always;
+        add_header Strict-Transport-Security "max-age=31536000" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header Referrer-Policy "strict-origin-when-cross-origin" always;
         add_header X-Frame-Options "DENY" always;

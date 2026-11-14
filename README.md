@@ -239,6 +239,12 @@ The UI runs on Cloud Run at **https://runlist-ui-894040023319.us-central1.run.ap
 
 The service has 1 vCPU and 256 MiB, scales from 0 to 2 instances and is billed per request. The workflow authenticates without keys, through Workload Identity Federation.
 
+The UI is the platform's only public entry point:
+
+- **Reaching the API:** all its outbound traffic goes through the VPC (Direct VPC egress), which is the only way in, because the API's ingress is internal.
+- **Rate limiting:** nginx limits log in, refresh and sign-up to 10 a minute per client IP (burst 10, then `429`). The client IP is the last `X-Forwarded-For` entry, which Cloud Run sets.
+- **Headers:** nginx adds HSTS and hides its version.
+
 The project's infrastructure (API, database VM, registry, service accounts, budget alert), its costs, and what to avoid so it stays free are in db-postgresql-runlist's [deploy/gcp/README.md](https://github.com/oggmont/db-postgresql-runlist/blob/main/deploy/gcp/README.md).
 
 The first page after a quiet period can take a few seconds, while Cloud Run starts the UI and the API.
